@@ -1,9 +1,11 @@
 const ms = require('./minesweeper.js')
 
-test('player board is generated', () => {
-  const myBoard = ms.generatePlayerBoard(3, 4)
-  expect(myBoard[0] && myBoard[1] && myBoard[2]).toContain(' ')
-  expect(myBoard).toHaveLength(3)
+test('player board is generated with blanks', () => {
+  const myBoard = ms.generatePlayerBoard(3, 3)
+  const blankBoard = [[' ', ' ', ' '],
+                      [' ', ' ', ' '],
+                      [' ', ' ', ' ']]
+  expect(myBoard).toEqual(blankBoard)
 })
 
 test('random integer is generated', () => {
@@ -14,21 +16,38 @@ test('random integer is generated', () => {
 
 test('bomb board is generated', () => {
   const myBoard = ms.generateBombBoard(3, 4, 5)
-  const myFlatBoard = myBoard[0].concat(myBoard[1], myBoard[2])
-  expect(myFlatBoard).toContain('B')
   expect(myBoard).toHaveLength(3)
+  expect(myBoard[0]).toHaveLength(4)
 })
 
-test('number of neighbor bombs', () => {
+test('bomb board contains bombs', () => {
+  const myBoard = ms.generateBombBoard(3, 4, 5)
+  const myFlatBoard = myBoard[0].concat(myBoard[1], myBoard[2])
+  expect(myFlatBoard).toContain('B')
+})
+
+test('bombs counted when all neighbor squares valid', () => {
   const bombBoard = [[null, 'B', null],
                     ['B', null, null],
                     [null, null, null]]
-  let neighborBombs = ms.getNumberOfNeighborBombs(bombBoard, 0, 0)
+  const neighborBombs = ms.getNumberOfNeighborBombs(bombBoard, 1, 1)
   expect(neighborBombs).toBe('2')
-  neighborBombs = ms.getNumberOfNeighborBombs(bombBoard, 2, 2)
+})
+
+test('bombs counted when top left picked', () => {
+  const bombBoard = [[null, 'B', null],
+                    ['B', null, null],
+                    [null, null, null]]
+  const neighborBombs = ms.getNumberOfNeighborBombs(bombBoard, 0, 0)
+  expect(neighborBombs).toBe('2')
+})
+
+test('bombs counted when bottom right picked', () => {
+  const bombBoard = [[null, 'B', null],
+                    ['B', null, null],
+                    [null, null, null]]
+  const neighborBombs = ms.getNumberOfNeighborBombs(bombBoard, 2, 2)
   expect(neighborBombs).toBe('0')
-  neighborBombs = ms.getNumberOfNeighborBombs(bombBoard, 1, 1)
-  expect(neighborBombs).toBe('2')
 })
 
 test('flipping a bombed tile', () => {
