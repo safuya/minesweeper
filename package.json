@@ -1,0 +1,26 @@
+{
+  "name": "minesweeper",
+  "version": "1.0.0",
+  "description": "Codecademy minesweeper for Introduction to JavaScript",
+  "main": "minesweeper.js",
+  "dependencies": {},
+  "devDependencies": {
+    "jest": "^21.2.1"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "collectCoverage": true
+  },
+  "standard": {
+    "globals": [ "test", "expect" ]
+  },
+  "keywords": [
+    "minesweeper",
+    "codecademy",
+    "javascript"
+  ],
+  "author": "Robert Hughes",
+  "license": "MIT"
+}
