@@ -3,13 +3,29 @@ Board = require('./board')
 test('player board is generated with blanks', () => {
   let myBoard = new Board(3, 3, 4)
   blankBoard = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]
-  expect(myBoard._playerBoard).toEqual(blankBoard)
+  expect(myBoard.playerBoard).toEqual(blankBoard)
 })
 
 test('bomb board is generated', () => {
   let myBoard = new Board(3, 4, 4)
-  expect(myBoard._bombBoard).toHaveLength(3)
-  expect(myBoard._bombBoard[0]).toHaveLength(4)
+  expect(myBoard.bombBoard).toHaveLength(3)
+  expect(myBoard.bombBoard[0]).toHaveLength(4)
+})
+
+test('merge method merges', () => {
+  let myBoard = new Board(2, 2, 4)
+  expect(myBoard.merged()).toEqual([' ', ' ', ' ', ' '])
+})
+
+test('number of bombs found', () => {
+  let myBoard = new Board(2, 2, 4)
+  myBoard.playerBoard = [['B', ' '], [' ', '1']]
+  expect(myBoard.bombsFound()).toBe(1)
+})
+
+test('number of safe squares', () => {
+  let myBoard = new Board(3, 3, 4)
+  expect(myBoard.safeSquares()).toBe(5)
 })
 
 test('printing the board', () => {
@@ -19,7 +35,7 @@ test('printing the board', () => {
 
 test('bombs counted when all neighbor squares valid', () => {
   let myBoard = new Board(3, 3, 4)
-  myBoard._bombBoard = [[null, 'B', null],
+  myBoard.bombBoard = [[null, 'B', null],
                         ['B', null, null],
                         [null, null, null]]
   expect(myBoard.getNumberOfNeighborBombs(1, 1)).toBe('2')
@@ -27,7 +43,7 @@ test('bombs counted when all neighbor squares valid', () => {
 
 test('bombs counted when top left picked', () => {
   let myBoard = new Board(3, 3, 4)
-  myBoard._bombBoard = [[null, 'B', null],
+  myBoard.bombBoard = [[null, 'B', null],
                         ['B', null, null],
                         [null, null, null]]
   expect(myBoard.getNumberOfNeighborBombs(0, 0)).toBe('2')
@@ -35,7 +51,7 @@ test('bombs counted when top left picked', () => {
 
 test('bombs counted when bottom right picked', () => {
   let myBoard = new Board(3, 3, 4)
-  myBoard._bombBoard = [[null, 'B', null],
+  myBoard.bombBoard = [[null, 'B', null],
                         ['B', null, null],
                         [null, null, null]]
   expect(myBoard.getNumberOfNeighborBombs(2, 2)).toBe('0')
@@ -43,8 +59,8 @@ test('bombs counted when bottom right picked', () => {
 
 test('flipping a bombed tile', () => {
   let myBoard = new Board(3, 3, 4)
-  myBoard._playerBoard = [['0', '1', '1'], [' ', ' ', ' '], [' ', ' ', ' ']]
-  myBoard._bombBoard = [[null, null, null],
+  myBoard.playerBoard = [['0', '1', '1'], [' ', ' ', ' '], [' ', ' ', ' ']]
+  myBoard.bombBoard = [[null, null, null],
                         [null, null, 'B'],
                         [null, null, null]]
   const bombed = myBoard.flipTile(1, 2)
@@ -55,22 +71,22 @@ test('flipping a bombed tile', () => {
 
 test('flipping a flipped tile', () => {
   let myBoard = new Board(3, 3, 4)
-  myBoard._playerBoard = [['0', '1', '1'], [' ', ' ', ' '], [' ', ' ', ' ']]
-  myBoard._bombBoard = [[null, null, null],
+  myBoard.playerBoard = [['0', '1', '1'], [' ', ' ', ' '], [' ', ' ', ' ']]
+  myBoard.bombBoard = [[null, null, null],
                         [null, null, 'B'],
                         [null, null, null]]
-  const prebombed = myBoard._playerBoard
+  const prebombed = myBoard.playerBoard
   const bombed = myBoard.flipTile(0, 0)
   expect(bombed).toEqual(prebombed)
 })
 
 test('flipping an unflipped tile', () => {
   let myBoard = new Board(3, 3, 4)
-  myBoard._playerBoard = [['0', '1', '1'], [' ', ' ', ' '], [' ', ' ', ' ']]
-  myBoard._bombBoard = [[null, null, null],
+  myBoard.playerBoard = [['0', '1', '1'], [' ', ' ', ' '], [' ', ' ', ' ']]
+  myBoard.bombBoard = [[null, null, null],
                         [null, null, 'B'],
                         [null, null, null]]
   myBoard.flipTile(1, 0)
-  expect(myBoard._playerBoard)
+  expect(myBoard.playerBoard)
     .toEqual([['0', '1', '1'], ['0', ' ', ' '], [' ', ' ', ' ']])
 })

@@ -6,15 +6,35 @@ const randomInt = (min, max) => {
 
 class Board {
   constructor(numberOfRows, numberOfColumns, numberOfBombs) {
-    this._playerBoard = Board
+    this.playerBoard = Board
       .generatePlayerBoard(numberOfRows, numberOfColumns)
-    this._bombBoard = Board
+    this.bombBoard = Board
       .generateBombBoard(numberOfRows, numberOfColumns, numberOfBombs)
+    this._numberOfBombs = numberOfBombs 
+  }
+
+  merged() {
+    let merged = []
+    this.playerBoard.forEach(row => {
+      row.forEach(square => {
+        merged.push(square)
+      })
+    })
+    return merged
+  }
+
+  bombsFound() {
+    return this.merged().filter(square => square === 'B').length
+  }
+
+  safeSquares() {
+    return this.merged().filter(square => square === ' ')
+      .length - this._numberOfBombs
   }
 
   print() {
     console.log(
-      this._playerBoard.map(row => row.join(' | ')).join('\n')
+      this.playerBoard.map(row => row.join(' | ')).join('\n')
     )
 
     return true
@@ -54,17 +74,17 @@ class Board {
   }
 
   flipTile(rowIndex, columnIndex) {
-    const target = this._bombBoard[rowIndex][columnIndex]
-    if (this._playerBoard[rowIndex][columnIndex] !== ' ') {
+    const target = this.bombBoard[rowIndex][columnIndex]
+    if (this.playerBoard[rowIndex][columnIndex] !== ' ') {
       console.log('This tile has already been flipped!')
-      return this._playerBoard
+      return this.playerBoard
     } else if (target === 'B') {
-      this._playerBoard[rowIndex][columnIndex] = 'B'
-      return this._playerBoard
+      this.playerBoard[rowIndex][columnIndex] = 'B'
+      return this.playerBoard
     } else {
-      this._playerBoard[rowIndex][columnIndex] =
+      this.playerBoard[rowIndex][columnIndex] =
         this.getNumberOfNeighborBombs(rowIndex, columnIndex)
-      return this._playerBoard
+      return this.playerBoard
     }
   }
 
@@ -72,8 +92,8 @@ class Board {
     const neighborOffsets = [[-1, -1], [-1, 0], [-1, 1],
                             [0, -1], [0, 1],
                             [1, -1], [1, 0], [1, 1]]
-    const numberOfRows = this._bombBoard.length
-    const numberOfColumns = this._bombBoard[0].length
+    const numberOfRows = this.bombBoard.length
+    const numberOfColumns = this.bombBoard[0].length
     let numberOfBombs = 0
   
     neighborOffsets.forEach(offset => {
@@ -84,7 +104,7 @@ class Board {
         neighborColumnIndex >= 0 &&
         neighborColumnIndex < numberOfColumns
       if (inBounds) {
-        if (this._bombBoard[neighborRowIndex][neighborColumnIndex] === 'B') {
+        if (this.bombBoard[neighborRowIndex][neighborColumnIndex] === 'B') {
           numberOfBombs++
         }
       }
